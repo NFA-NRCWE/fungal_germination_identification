@@ -220,17 +220,20 @@ def isotropic_growth(df, species, media, date):
 
     # area data only
     area_data = data_long[data_long["sheet_name"] == "Area (um2)"].copy()
-
-    # remove ungerminated conidia
+    
+    #Label first and last ecorded areaa
     area_data["Original_Size"] = area_data.groupby("TrackId")["value"].transform("first")
     area_data["Max_Size"] = area_data.groupby("TrackId")["value"].transform("max")
 
+    
+    # remove ungerminated conidia by removing all conida that failed to grow larger than 2.5x origional
     area_data_filtered = area_data[
         area_data["Max_Size"] > 2.5 * area_data["Original_Size"]
     ].copy()
-
+    
+    #stall code if no area over no 2.5X (look at original video to confirm germination)
     if area_data_filtered.empty:
-        raise ValueError("No conidia grew > 2.5x original size, likely no germination.")
+        raise ValueError("No conidia grew > 2.5x original size, likely no germination. Watch video to confirm")
 
     results = []
     model_rows = []
@@ -238,16 +241,21 @@ def isotropic_growth(df, species, media, date):
     # fit segmented regression per TrackId
     for track_id, d in area_data_filtered.groupby("TrackId"):
         d = d[["TrackId", "time", "value"]].dropna().sort_values("time").copy()
-
+        
+        #confirm there is enough time period points to make an accurate segmented regression
         if len(d) < 4:
             continue
-
+        
+        #confirm only looking at resoirded time points
         unique_times = np.sort(d["time"].unique())
+        
+        #list of potential breakpoints
         candidate_breaks = unique_times[1:-1]
 
         if len(candidate_breaks) == 0:
             continue
-
+        
+        #name initial  model values
         best_break = None
         best_model = None
         best_rss = np.inf
@@ -266,7 +274,8 @@ def isotropic_growth(df, species, media, date):
 
             fit = sm.OLS(y, X).fit()
             rss = np.sum(fit.resid ** 2)
-
+            
+            #only best fit metrics saved
             if rss < best_rss:
                 best_rss = rss
                 best_break = bp
@@ -275,7 +284,7 @@ def isotropic_growth(df, species, media, date):
         if best_model is None:
             continue
 
-        # predicted value at breakpoint
+        #Predicted area at breakpoint using model deirved above
         bp_X = pd.DataFrame({
             "intercept": [1.0],
             "time": [best_break],
@@ -283,10 +292,12 @@ def isotropic_growth(df, species, media, date):
         })
 
         breakpoint_area = best_model.predict(bp_X)[0]
-
+        
+        #Pull inital area of conidia at first recorded time
         first_time = d["time"].min()
         first_area = d.loc[d["time"] == first_time, "value"].iloc[0]
 
+        #append all conidia data
         results.append({
             "TrackId": track_id,
             "Breakpoint_Time": best_break,
@@ -306,12 +317,14 @@ def isotropic_growth(df, species, media, date):
         model_rows.append(d)
 
     if not results:
-        raise ValueError("No TrackId had enough valid data for segmented regression.")
+        raise ValueError("No TrackId had enough valid data for segmented regression. look at video, likely no germination")
 
     breakpoint_values = pd.DataFrame(results)
+
+    #model with hingepoint saved
     test_model_data = pd.concat(model_rows, ignore_index=True)
 
-    # averaged output, matching R reframe()
+    # average of all conidia with experiemntal condition identification
     breakpoint_results = pd.DataFrame({
         "Species": [species],
         "Media": [media],
@@ -322,7 +335,7 @@ def isotropic_growth(df, species, media, date):
         "Average_Swelling_change": [breakpoint_values["Swelling_change"].mean()]
     })
 
-    # plot equivalent to ggplot facet_wrap(~ TrackId)
+    # plot facet grid of every conidia with regression done
     g = sns.FacetGrid(
         test_model_data,
         col="TrackId",
@@ -330,8 +343,11 @@ def isotropic_growth(df, species, media, date):
         sharey=False,
         height=3
     )
-
+    
+    #add dot of time points
     g.map_dataframe(sns.scatterplot, x="time", y="value")
+
+    #add line of line regression
     g.map_dataframe(sns.lineplot, x="time", y="predicted")
 
     for ax, track_id in zip(g.axes.flat, test_model_data["TrackId"].unique()):
