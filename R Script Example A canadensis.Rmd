@@ -1,0 +1,229 @@
+---
+title: "R Script Example"
+output: html_document
+date: "2026-04-07"
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(httr)
+```
+
+#download files form github repository
+```{r}
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G9_As%20canadensis_3%20MY70%20track.xlsx", "G1_As canadensis_3 CY20 track.xlsx", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G2_As%20canadensis_3%20CY20%20track.xlsx", "G2_As canadensis_3 CY20 track.xlsx", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G3_As%20canadensis_3%20CY20%20track.xlsx", "G3_As canadensis_3 CY20 track.xlsx", mode = "wb")
+
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G7_As%20canadensis_3%20MY70%20track.xlsx", "G7_As canadensis_3 MY70 track.xlsx", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G8_As%20canadensis_3%20MY70%20track.xlsx", "G8_As canadensis_3 MY70 track.xlsx", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G9_As%20canadensis_3%20MY70%20track.xlsx", "G9_As canadensis_3 MY70 track.xlsx", mode = "wb")
+
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Functions_R_Script.R",  "Functions.R", mode = "wb")
+```
+
+#run functions script to load fucntions into global environment
+```{r}
+source("Functions.R")
+```
+
+#A. canadensis CY20 19.08
+```{r}
+#transform data to bind all sheet data with a new column called sheet_name to define data origin
+a_canadensis_a_cy20_19.08_origional_time_column <- combine_excel_sheets("G1_As canadensis_3 CY20 track.xlsx")
+a_canadensis_a_cy20_19.08_df <- rename_repetition_columns(a_canadensis_a_cy20_19.08_origional_time_column)
+
+a_canadensis_b_cy20_19.08_origional_time_column <- combine_excel_sheets("G2_As canadensis_3 CY20 track.xlsx")
+a_canadensis_b_cy20_19.08_df <- rename_repetition_columns(a_canadensis_b_cy20_19.08_origional_time_column)
+
+a_canadensis_c_cy20_19.08_origional_time_column <- combine_excel_sheets("G3_As canadensis_3 CY20 track.xlsx")
+a_canadensis_c_cy20_19.08_df <- rename_repetition_columns(a_canadensis_c_cy20_19.08_origional_time_column)
+
+
+
+#for isotropic growth value use all replicate data combined
+a_canadensis_cy20_19.08_total_df <- rbind(a_canadensis_a_cy20_19.08_df, a_canadensis_b_cy20_19.08_df, a_canadensis_c_cy20_19.08_df)
+a_canadensis_cy20_19.08_isotropic <- isotropic_growth(a_canadensis_cy20_19.08_total_df, 
+                                                      "A. canadensis", 
+                                                      "CY20", 
+                                                      "19.08.24")
+
+      #save isotropic growth as a data frame
+      a_canadensis_cy20_19.08_isotropic_df <- a_canadensis_cy20_19.08_isotropic[["isotropic_data"]]
+      #segmented regression plot
+      a_canadensis_cy20_19.08_isotropic[["plot"]]
+      
+
+#find germination time using using function in Functions.R script on replicates (Swelling_change from as area transformation factor)
+
+#Replicate A (Add replicate column for sorting later one)
+a_canadensis_a_cy20_19.08_germiantion_data <- find_time_point(a_canadensis_a_cy20_19.08_df,
+                                                               a_canadensis_cy20_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "CY20", 
+                                                               "19.08.24")
+a_canadensis_a_cy20_19.08_germiantion_data$Replicate <- "A"
+
+#Replicate B (Add replicate column for sorting later one)
+a_canadensis_b_cy20_19.08_germiantion_data <- find_time_point(a_canadensis_b_cy20_19.08_df,
+                                                               a_canadensis_cy20_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "CY20", 
+                                                               "19.08.24")
+a_canadensis_b_cy20_19.08_germiantion_data$Replicate <- "B"
+
+#Replicate C (Add replicate column for sorting later one)
+a_canadensis_c_cy20_19.08_germiantion_data <- find_time_point(a_canadensis_c_cy20_19.08_df,
+                                                               a_canadensis_cy20_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "CY20", 
+                                                               "19.08.24")
+a_canadensis_c_cy20_19.08_germiantion_data$Replicate <- "C"
+
+
+#combine all germination data
+a_canadensis_total_cy20_19.08_germiantion_data <- rbind(a_canadensis_a_cy20_19.08_germiantion_data,
+                                                        a_canadensis_b_cy20_19.08_germiantion_data,
+                                                        a_canadensis_c_cy20_19.08_germiantion_data)
+
+#Median germination metrics of all replicates
+a_canadensis_replicate_cy20_19.08_germiantion_data <- a_canadensis_total_cy20_19.08_germiantion_data %>%
+  group_by(Species, Media, Date, Replicate, ScanArea) %>%
+  reframe(Germination_Time =  median(selected_time_point, na.rm = TRUE),
+          SD_Germination_Time = sd(selected_time_point, na.rm = TRUE),
+          Linear_Growth  = median(linear_growth_rate, na.rm = TRUE),
+          SD_Linear_Growth  = sd(linear_growth_rate, na.rm = TRUE),
+          Exponential_Growth  = median(exponential_growth_rate, na.rm = TRUE),
+          SD_Exponential_Growth  = sd(exponential_growth_rate, na.rm = TRUE),
+          n = length(unique(TrackId)))
+
+#average germination metrics of  replicates
+a_canadensis_total_replicate_cy20_19.08_germiantion_data <- a_canadensis_replicate_cy20_19.08_germiantion_data %>%
+  group_by(Species, Media, Date) %>%
+  reframe(Germination_Time =  mean(Germination_Time, na.rm = TRUE),
+          SD_Germination_Time = sd(a_canadensis_replicate_cy20_19.08_germiantion_data$Germination_Time, na.rm = TRUE),
+          Linear_Growth  = mean(Linear_Growth, na.rm = TRUE),
+          SD_Linear_Growth  = sd(a_canadensis_replicate_cy20_19.08_germiantion_data$Linear_Growth, na.rm = TRUE),
+          Exponential_Growth  = mean(Exponential_Growth, na.rm = TRUE),
+          SD_Exponential_Growth  = sd(a_canadensis_replicate_cy20_19.08_germiantion_data$Exponential_Growth, na.rm = TRUE),
+          n = sum(n),
+          ScanArea = "Replicate Total",
+          Replicate = "Replicate Total")
+
+
+a_canadensis_replicate_cy20_19.08_germiantion_data <- rbind(a_canadensis_replicate_cy20_19.08_germiantion_data,
+                                                                a_canadensis_total_replicate_cy20_19.08_germiantion_data)
+
+#plot total length of conidia post germination using function in Functions.R script
+a_canadensis_cy20_19.08_length_since_germination <- length_post_germination(a_canadensis_cy20_19.08_total_df, 
+                                                                          a_canadensis_total_cy20_19.08_germiantion_data,
+                                                                          "A. canadensis",
+                                                                          "CY20", 
+                                                                          "19.08.24")
+a_canadensis_cy20_19.08_length_since_germination[["plot"]]
+
+a_canadensis_replicate_cy20_19.08_germiantion_data
+```
+
+#A. canadensis MY70 19.08
+```{r}
+#transform data to bind all sheet data with a new column called sheet_name to define data origin
+a_canadensis_a_my70_19.08_origional_time_column <- combine_excel_sheets("G7_As canadensis_3 MY70 track.xlsx")
+a_canadensis_a_my70_19.08_df <- rename_repetition_columns(a_canadensis_a_my70_19.08_origional_time_column)
+
+a_canadensis_b_my70_19.08_origional_time_column <- combine_excel_sheets("G8_As canadensis_3 MY70 track.xlsx")
+a_canadensis_b_my70_19.08_df <- rename_repetition_columns(a_canadensis_b_my70_19.08_origional_time_column)
+
+a_canadensis_c_my70_19.08_origional_time_column <- combine_excel_sheets("G9_As canadensis_3 MY70 track.xlsx")
+a_canadensis_c_my70_19.08_df <- rename_repetition_columns(a_canadensis_c_my70_19.08_origional_time_column)
+
+
+
+#for isotropic growth value use all replicate data combined
+a_canadensis_my70_19.08_total_df <- rbind(a_canadensis_a_my70_19.08_df, a_canadensis_b_my70_19.08_df, a_canadensis_c_my70_19.08_df)
+a_canadensis_my70_19.08_isotropic <- isotropic_growth(a_canadensis_my70_19.08_total_df, 
+                                                      "A. canadensis", 
+                                                      "MY70", 
+                                                      "19.08.24")
+
+      #save isotropic growth as a data frame
+      a_canadensis_my70_19.08_isotropic_df <- a_canadensis_my70_19.08_isotropic[["isotropic_data"]]
+      #segmented regression plot
+      a_canadensis_my70_19.08_isotropic[["plot"]]
+      
+
+#fing germination time using using function in Functions.R script on replicates (Swelling_change from as area tranformation factor)
+
+#Replicate A (Add replicate column for sorting later one)
+a_canadensis_a_my70_19.08_germiantion_data <- find_time_point(a_canadensis_a_my70_19.08_df,
+                                                               a_canadensis_my70_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "MY70", 
+                                                               "19.08.24")
+a_canadensis_a_my70_19.08_germiantion_data$Replicate <- "A"
+
+#Replicate B (Add replicate column for sorting later one)
+a_canadensis_b_my70_19.08_germiantion_data <- find_time_point(a_canadensis_b_my70_19.08_df,
+                                                               a_canadensis_my70_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "MY70", 
+                                                               "19.08.24")
+a_canadensis_b_my70_19.08_germiantion_data$Replicate <- "B"
+
+#Replicate C (Add replicate column for sorting later one)
+a_canadensis_c_my70_19.08_germiantion_data <- find_time_point(a_canadensis_c_my70_19.08_df,
+                                                               a_canadensis_my70_19.08_isotropic_df$Average_Swelling_change, 
+                                                               "A. canadensis", 
+                                                               "MY70", 
+                                                               "19.08.24")
+a_canadensis_c_my70_19.08_germiantion_data$Replicate <- "C"
+
+
+#combine all germination data
+a_canadensis_total_my70_19.08_germiantion_data <- rbind(a_canadensis_a_my70_19.08_germiantion_data,
+                                                        a_canadensis_b_my70_19.08_germiantion_data,
+                                                        a_canadensis_c_my70_19.08_germiantion_data)
+
+#Median germiantion metrics of all replicates
+a_canadensis_replicate_my70_19.08_germiantion_data <- a_canadensis_total_my70_19.08_germiantion_data %>%
+  group_by(Species, Media, Date, Replicate, ScanArea) %>%
+  reframe(Germination_Time =  median(selected_time_point, na.rm = TRUE),
+          SD_Germination_Time = sd(selected_time_point, na.rm = TRUE),
+          Linear_Growth  = median(linear_growth_rate, na.rm = TRUE),
+          SD_Linear_Growth  = sd(linear_growth_rate, na.rm = TRUE),
+          Exponential_Growth  = median(exponential_growth_rate, na.rm = TRUE),
+          SD_Exponential_Growth  = sd(exponential_growth_rate, na.rm = TRUE),
+          n = length(unique(TrackId)))
+
+#average germiantion metrics of  replicates
+a_canadensis_total_replicate_my70_19.08_germiantion_data <- a_canadensis_replicate_my70_19.08_germiantion_data %>%
+  group_by(Species, Media, Date) %>%
+  reframe(Germination_Time =  mean(Germination_Time, na.rm = TRUE),
+          SD_Germination_Time = sd(a_canadensis_replicate_my70_19.08_germiantion_data$Germination_Time, na.rm = TRUE),
+          Linear_Growth  = mean(Linear_Growth, na.rm = TRUE),
+          SD_Linear_Growth  = sd(a_canadensis_replicate_my70_19.08_germiantion_data$Linear_Growth, na.rm = TRUE),
+          Exponential_Growth  = mean(Exponential_Growth, na.rm = TRUE),
+          SD_Exponential_Growth  = sd(a_canadensis_replicate_my70_19.08_germiantion_data$Exponential_Growth, na.rm = TRUE),
+          n = sum(n),
+          ScanArea = "Replicate Total",
+          Replicate = "Replicate Total")
+
+
+a_canadensis_replicate_my70_19.08_germiantion_data <- rbind(a_canadensis_replicate_my70_19.08_germiantion_data,
+                                                                a_canadensis_total_replicate_my70_19.08_germiantion_data)
+
+#plot total length of conidia post germination using function in Functions.R script
+a_canadensis_my70_19.08_germiantion_data <- length_post_germination(a_canadensis_my70_19.08_total_df, 
+                                                                      a_canadensis_total_my70_19.08_germiantion_data,
+                                                                      "A. canadensis",
+                                                                      "MY70", 
+                                                                      "19.08.24")
+a_canadensis_my70_19.08_germiantion_data[["plot"]]
+
+a_canadensis_replicate_my70_19.08_germiantion_data                                                                
+```
+
