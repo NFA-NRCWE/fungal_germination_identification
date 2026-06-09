@@ -100,22 +100,38 @@ source("Germination Functions.R")
 *convert an Excell file with multiple sheets to one with a Python or R dataframe.
 ### rename_repetition_columns (rename_repetition_columns2  rename_repetition_columns3 )
 ### isotropic_growth 
+* Python or R summary dataframe with conidia isotropic growth metrics:
+  * Species
+  * Media
+  * Date
+  * Average_Breakpoint_Time
+  * Average_Breakpoint_Area
+  * Average_First_Area
+  * Average_Swelling_change
+* Plots of all segmented regressions
 ### find_time_point 
 * Python or R dataframe with all tracked conidia germiantion metrics:
   * Species
   * Media
   * Date
   * ScanArea
- - TrackId
- - selected_time_point
- - selected_time_point_word
- - last_time_point
- - selected_length
- - final_length
- - linear_growth_rate
- - exponential_growth_rate
+  * TrackId
+  * selected_time_point
+  * selected_time_point_word
+  * last_time_point
+  * selected_length
+  * final_length
+  * linear_growth_rate
+  * exponential_growth_rate
 ### length_post_germination 
-### relative_time_df = relative_time_data_combined, median_length_df = total_length_median, plot = plot)
+* Python or R dataframe with all tracked conidia germiantion metrics:
+  * Species
+ 
+* Python or R summary dataframe with median length of conidia with predition data of linear and exponential growth models:
+  * Species
+  * Media
+  * Date
+* Plot of every germinated condias length over 24 hours alongside  the median length, linear model, and exponential model.
 
 ## Methods
 ### Isotropic Growth
