@@ -68,7 +68,7 @@ library(car)
 library(drc)
 
 #IMPORTANT NOTE
-#segmented package interferres with dplyr::select 
+#segmented package interferes with dplyr::select 
 ```
 ## Usage
 ### Python
@@ -76,7 +76,7 @@ library(drc)
 import os
 
 #clone repository on you working directory 
-!git clone https://github.com/NFA-NRCWE/fungal_germination_identification.git
+!git clone https://github.com/NFA-NRCWE/fungal_germination_identification/Python.git
 sys.path.append("fungal_germination_identification")
 
 #import functions as germ_functions
@@ -85,7 +85,7 @@ import Functions_Python as germ_function
 
 ### R
 ```{r}
-download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Functions_R_Script.R",  "Germination Functions.R", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/R_Script/Functions_R_Script.R",  "Germination Functions.R", mode = "wb")
 
 #run functions script to load fucntions into global environment
 source("Germination Functions.R")
