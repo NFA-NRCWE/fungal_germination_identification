@@ -23,7 +23,7 @@ download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_id
 download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G8_As%20canadensis_3%20MY70%20track.xlsx", "G8_As canadensis_3 MY70 track.xlsx", mode = "wb")
 download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Example%20Data/G9_As%20canadensis_3%20MY70%20track.xlsx", "G9_As canadensis_3 MY70 track.xlsx", mode = "wb")
 
-download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/Functions_R_Script.R",  "Germination Functions.R", mode = "wb")
+download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_identification/main/R_Script/Functions_R_Script.R",  "Germination Functions.R", mode = "wb")
 ```
 
 #run functions script to load fucntions into global environment
