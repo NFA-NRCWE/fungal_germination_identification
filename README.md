@@ -101,7 +101,7 @@ source("Germination Functions.R")
 ### rename_repetition_columns (rename_repetition_columns2  rename_repetition_columns3 )
 ### isotropic_growth 
 ### find_time_point 
-*Python or R dataframe with all tracked conidia germiantion metrics:
+* Python or R dataframe with all tracked conidia germiantion metrics:
 - Species
 - Media
 - Date
