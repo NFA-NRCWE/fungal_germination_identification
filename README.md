@@ -102,7 +102,7 @@ source("Germination Functions.R")
 ### isotropic_growth 
 ### find_time_point 
 * Python or R dataframe with all tracked conidia germiantion metrics:
- - Species
+ * Species
  - Media
  - Date
  - ScanArea
