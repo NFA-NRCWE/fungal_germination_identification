@@ -50,49 +50,6 @@ The repository is intended for automated processing of high-throughput imaging e
   * media to identify test variable (ex: media composition, fungicide concentration)
   * date to separate and identify experimental runs
 
-### rename_repetition_columns (rename_repetition_columns2 & rename_repetition_columns3)
-* Python or R dataframe with Repetition column converted to match the time of the experiment
-### isotropic_growth 
-* Python or R summary dataframe with conidia isotropic growth metrics:
-  * Species
-  * Media
-  * Date
-  * Average_Breakpoint_Time
-  * Average_Breakpoint_Area
-  * Average_First_Area
-  * Average_Swelling_change
-* Plots of all segmented regressions
-### find_time_point 
-* Python or R dataframe with all tracked conidia germination metrics:
-  * Species
-  * Media
-  * Date
-  * ScanArea
-  * TrackId
-  * selected_time_point
-  * selected_time_point_word
-  * last_time_point
-  * selected_length
-  * final_length
-  * linear_growth_rate
-  * exponential_growth_rate
-### length_post_germination 
-* Python or R dataframe with all germinated conidia length relative to identified germination time:
-  * track_id
-  * relative_time
-  * length
-* Python or R summary dataframe with median length of conidia with prediction data of linear and exponential growth models:
-  * Species
-  * Media
-  * Date
-  * relative_time
-  * Median_Length
-  * log_Median_Length
-  * n
-  * lm_predicted
-  * exm_predicted
-* Plot of every germinated condias length over 24 hours alongside the median length, linear model, and exponential model.
- 
 ## Workflow
 1. Run Segmentation + Object Track modules on video
 2. Perform quality control and filtering to verify that no debris or sugar crystals have been misidentified
