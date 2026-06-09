@@ -33,7 +33,12 @@ Functions that use data output from real-time imaging to identify germination an
 1. Run Segmentation + Object Track modules on video
 2. Perform quality control and filtering to verify that no debris or sugar crystals have been misidentified
 3. Export to Excel files.
-4. Run Excel through a workflow similar to the examples to quantify isotropic swelling (isotropic_growth), germination timepoint (find_time_point), and hyphal growth rates (length_post_germination).
+4. Convert Excel files to a Python or R-friendly format using `combine_excel_sheets` 
+5. Rename time columns (marked as Repetition BLANK) to match the time of the experiment using the `rename_repetition_columns` functions
+    *`rename_repetition_columns` is design for experimetns read evey 4 hours for 20 hours and then every 2 hours till the termination of experiment
+    *`rename_repetition_columns2` is design for experimetns read once an hour till the termination of experiment
+    *`rename_repetition_columns3` is design for experimetns read evey 2 hours till the termination of experiment
+6. Move through a similar workflow to the examples to quantify isotropic swelling (`isotropic_growth`), germination timepoint (`find_time_point`), and hyphal growth rates (`length_post_germination)`.
 
 ## Installation
 ### Python Dependencies
@@ -94,15 +99,14 @@ source("Germination Functions.R")
 
 ## Methods
 ### Isotropic Growth
-Isotropic growth is determined using segmented linear regressions on conidia area over time. The breakpoint (or hinge point) is the moment when the initial linear regression stops being significantly correlated with the initial linear regression, which is inferred as the transition from isotropic growth to polarized growth. The isoropic_growth function returns plots of all conidia that increased in area at least 2.5X over the experimental window with segmented regressions and a summary dataframe containing Average_Swelling_change, Average_Breakpoint_Time, Average_Breakpoint_Area, and Average_First_Area.
+Isotropic growth is determined using segmented linear regressions on conidia area over time. The breakpoint (or hinge point) is the moment when the initial linear regression stops being significantly correlated with the initial linear regression, which is inferred as the transition from isotropic growth to polarized growth. The `isoropic_growth` function returns plots of all conidia that increased in area at least 2.5X over the experimental window with segmented regressions and a summary dataframe containing `Average_Swelling_change`, `Average_Breakpoint_Time`, `Average_Breakpoint_Area`, and` Average_First_Area`.
 
 ### Gemination  Identification
-The germination identification function (find_time_point) runs through individual conidia (identified by TrackId) to identify the image frame in which germination tube formation initiates. This function uses the Average_Swelling_change (multiplied by 1.25x to limit false positives) derived from the isotropic growth analysis, alongside a decrease in circularity below 0.94 to systematically identify germination. This function returns a data frame with the germination time point identified for every tracked conidia (selected_time_point), and derives the hypheal growth rate (linear_growth_rate and exponential_growth_rate). Ungerminated conidia metrics are returned as NA.
+The germination identification function (`find_time_point`) runs through individual conidia (identified by `TrackId`) to identify the image frame in which germination tube formation initiates. This function uses the `Average_Swelling_change` (multiplied by 1.25x to limit false positives) derived from the isotropic growth analysis, alongside a decrease in circularity below 0.94 to systematically identify germination. This function returns a data frame with the germination time point identified for every tracked conidia (`selected_time_point`), and derives the hypheal growth rate (`linear_growth_rate` and `exponential_growth_rate`). Ungerminated conidia metrics are returned as NA.
 
 ### Hyphal Growth
-Image data is reformatted using the germination time point as the new relative time 0, and the total length of conidia is tracked over time. Both exponential and linear growth models are derived from the new relative data. The function length_post_germination returns a data frame with the relative_time and lengths of all germinated conidia with track_id as identifier, a dataframe with relative_time tracked alongside `Median_Length`, linear modal length predictions (`lm_predicted`), and exponential model length predictions (`exm_predicted`). This function also plots every germinated condias length over 24 hours alongside  the median length, linear model, and exponential model.
+Image data is reformatted using the germination time point as the new relative time 0, and the total length of conidia is tracked over time. Both exponential and linear growth models are derived from the new relative data. The function `length_post_germination` returns a data frame with the relative_time and lengths of all germinated conidia with `track_id` as identifier, a dataframe with relative_time tracked alongside `Median_Length`, linear modal length predictions (`lm_predicted`), and exponential model length predictions (`exm_predicted`). This function also plots every germinated condias length over 24 hours alongside  the median length, linear model, and exponential model.
 
-Growth rates are calculated from the change in hyphal length over time following germination. The specific implementation is described within the analysis scripts.
 ## Citation
 Priest, K. (2026). fungal_germination_identification (Version 1.0) [Computer software]. GitHub. https://github.com/NFA-NRCWE/fungal_germination_identification
 
