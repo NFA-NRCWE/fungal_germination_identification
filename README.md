@@ -3,7 +3,7 @@ Functions that use data output from real-time imaging to identify germination an
 
 
 
-**Repository Structure**
+_**Repository Structure**_
 ├── Python/
 │   ├── Functions_Python.py
 │   └── Example A canadensis - Python.ipynb
