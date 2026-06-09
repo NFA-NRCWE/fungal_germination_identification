@@ -34,17 +34,50 @@ Functions that use data output from real-time imaging to identify germination an
 
 ## Installation
 ### Python Dependencies
+```bash
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.formula.api as smf
+import sys
+import re
+import requests
+import os
+import importlib.util
+from pathlib import Path
+```
 
 ### R Dependencies
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+library(RColorBrewer)
+library(segmented)
+library(nortest)
+library(car)
+library(drc)
 
+#IMPORTANT NOTE
+```segmented``` package interferres with ```dplyr::select```
+
+```
 ## Usage
 ### Python
 ```bash
 import os
 
+#clone repository on you working directory 
 !git clone https://github.com/NFA-NRCWE/fungal_germination_identification.git
 sys.path.append("fungal_germination_identification")
 
+#import functions as germ_functions
 import Functions_Python as germ_function
 ```
 
