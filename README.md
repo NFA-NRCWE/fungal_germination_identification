@@ -26,11 +26,14 @@ Functions that use data output from real-time imaging to identify germination an
 ```
 
 ## Input Data
-* Germination time estimates
-* Hyphal growth rate calculations
-* Summary tables
-
+* Excell fles fro oCelloScope Segmentation+Object Track files
+    * Functions will work on other data formats as long as imported data is similarly structured
+ 
 ## Workflow
+1. Run Segmentation + Object Track modules on video
+2. Preform quality control and filtering to verify no depris or sugar crystals have been misidentified 
+3. Export out Excell files
+4. Run Excells thorugh similar work flow as in examples to quantify isotropphic swelling (isotropic_growth), germination timepoint (find_time_point), and hyphal growth rates (length_post_germination).
 
 ## Installation
 ### Python Dependencies
@@ -65,8 +68,7 @@ library(car)
 library(drc)
 
 #IMPORTANT NOTE
-```segmented``` package interferres with ```dplyr::select```
-
+#segmented package interferres with dplyr::select 
 ```
 ## Usage
 ### Python
