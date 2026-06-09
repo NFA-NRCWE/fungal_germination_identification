@@ -35,9 +35,9 @@ Functions that use data output from real-time imaging to identify germination an
 3. Export to Excel files.
 4. Convert Excel files to a Python or R-friendly format using `combine_excel_sheets` 
 5. Rename time columns (marked as Repetition BLANK) to match the time of the experiment using the `rename_repetition_columns` functions
-    -`rename_repetition_columns` is design for experimetns read evey 4 hours for 20 hours and then every 2 hours till the termination of experiment
-    -`rename_repetition_columns2` is design for experimetns read once an hour till the termination of experiment
-    -`rename_repetition_columns3` is design for experimetns read evey 2 hours till the termination of experiment
+    - `rename_repetition_columns` is design for experimetns read evey 4 hours for 20 hours and then every 2 hours till the termination of experiment
+    - `rename_repetition_columns2` is design for experimetns read once an hour till the termination of experiment
+    - `rename_repetition_columns3` is design for experimetns read evey 2 hours till the termination of experiment
 6. Move through a similar workflow to the examples to quantify isotropic swelling (`isotropic_growth`), germination timepoint (`find_time_point`), and hyphal growth rates (`length_post_germination)`.
 
 ## Installation
