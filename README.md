@@ -97,8 +97,9 @@ source("Germination Functions.R")
 ```
 ## Outputs
 ### combine_excel_sheets
-*convert an Excell file with multiple sheets to one with a Python or R dataframe.
-### rename_repetition_columns (rename_repetition_columns2  rename_repetition_columns3 )
+* Python or R dataframe of the Excel file with multiple sheets concatenated
+### rename_repetition_columns (rename_repetition_columns2 & rename_repetition_columns3)
+* Python or R dataframe with Repetition column converted to match the time of the experiment
 ### isotropic_growth 
 * Python or R summary dataframe with conidia isotropic growth metrics:
   * Species
@@ -110,7 +111,7 @@ source("Germination Functions.R")
   * Average_Swelling_change
 * Plots of all segmented regressions
 ### find_time_point 
-* Python or R dataframe with all tracked conidia germiantion metrics:
+* Python or R dataframe with all tracked conidia germination metrics:
   * Species
   * Media
   * Date
@@ -124,14 +125,21 @@ source("Germination Functions.R")
   * linear_growth_rate
   * exponential_growth_rate
 ### length_post_germination 
-* Python or R dataframe with all tracked conidia germiantion metrics:
-  * Species
- 
-* Python or R summary dataframe with median length of conidia with predition data of linear and exponential growth models:
+* Python or R dataframe with all germinated conidia length relative to identified germination time:
+  * track_id
+  * relative_time
+  * length
+* Python or R summary dataframe with median length of conidia with prediction data of linear and exponential growth models:
   * Species
   * Media
   * Date
-* Plot of every germinated condias length over 24 hours alongside  the median length, linear model, and exponential model.
+  * relative_time
+  * Median_Length
+  * log_Median_Length
+  * n
+  * lm_predicted
+  * exm_predicted
+* Plot of every germinated condias length over 24 hours alongside the median length, linear model, and exponential model.
 
 ## Methods
 ### Isotropic Growth
