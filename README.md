@@ -102,18 +102,18 @@ source("Germination Functions.R")
 ### isotropic_growth 
 ### find_time_point 
 * Python or R dataframe with all tracked conidia germiantion metrics:
-- Species
-- Media
-- Date
-- ScanArea
-- TrackId
-- selected_time_point
-- selected_time_point_word
-- last_time_point
-- selected_length
-- final_length
-- linear_growth_rate
-- exponential_growth_rate
+ - Species
+ - Media
+ - Date
+ - ScanArea
+ - TrackId
+ - selected_time_point
+ - selected_time_point_word
+ - last_time_point
+ - selected_length
+ - final_length
+ - linear_growth_rate
+ - exponential_growth_rate
 ### length_post_germination 
 ### relative_time_df = relative_time_data_combined, median_length_df = total_length_median, plot = plot)
 
