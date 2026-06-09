@@ -33,7 +33,7 @@ Functions that use data output from real-time imaging to identify germination an
 1. Run Segmentation + Object Track modules on video
 2. Perform quality control and filtering to verify that no debris or sugar crystals have been misidentified
 3. Export to Excel files.
-4. Convert Excel files to a Python or R-friendly format using `combine_excel_sheets` 
+4. Convert Excel files to a Python- or R-friendly format using `combine_excel_sheets` 
 5. Rename time columns (marked as Repetition BLANK) to match the time of the experiment using the `rename_repetition_columns` functions
     - `rename_repetition_columns` is design for experimetns read evey 4 hours for 20 hours and then every 2 hours till the termination of experiment
     - `rename_repetition_columns2` is design for experimetns read once an hour till the termination of experiment
@@ -96,6 +96,26 @@ download.file("https://raw.githubusercontent.com/NFA-NRCWE/fungal_germination_id
 source("Germination Functions.R")
 ```
 ## Outputs
+### combine_excel_sheets
+*convert an Excell file with multiple sheets to one with a Python or R dataframe.
+### rename_repetition_columns (rename_repetition_columns2  rename_repetition_columns3 )
+### isotropic_growth 
+### find_time_point 
+*Python or R dataframe with all tracked conidia germiantion metrics:
+- Species
+- Media
+- Date
+- ScanArea
+- TrackId
+- selected_time_point
+- selected_time_point_word
+- last_time_point
+- selected_length
+- final_length
+- linear_growth_rate
+- exponential_growth_rate
+### length_post_germination 
+### relative_time_df = relative_time_data_combined, median_length_df = total_length_median, plot = plot)
 
 ## Methods
 ### Isotropic Growth
