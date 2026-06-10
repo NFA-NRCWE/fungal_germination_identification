@@ -1,3 +1,13 @@
+#install and load packages
+packages <- c("readxl", "dplyr", "tidyverse", "ggplot2", "ggpubr", "knitr", "RColorBrewer", "segmented", "nortest", "car", "drc")
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
+
 library(readxl)
 library(dplyr)
 library(tidyverse)
